@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//LOGGER" "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!--
+        自动备份文件，当日志文件达到一个阈值时自动备份
+        参数
+        File:日志文件的路径名
+        Append:是否在已存在的文件上追加，否则删除重建
+        MaxBackupIndex:备份文件的最大个数
+        MaxFileSize:每个文件的大小
+        Layout:输出样式
+    -->
+    <appender name="filelog_appender" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="${erp}logs/erp_logs_all.log"/>
+        <param name="Append" value="true"/>
+        <param name="MaxFileSize" value="10MB"/>
+        <param name="MaxBackupIndex" value="10000"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.sss} %-5p [%t] %l:%m%n"/>
+        </layout>
+    </appender>
+    <!--
+        定期备份文件，配置多久产生一个新的日志文件信息
+        File:日志文件的路径名
+        Append:是否在已存在的文件上追加，否则删除重建
+        DatePattern:设置日志备份的频率，默认一天一个文件
+                     一天一个文件
+                     <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+                     一分钟一个文件
+                     <param name="DatePattern" value="'.'yyyy-MM-dd-HH-mm'.log'" />
+        Layout:输出样式
+    -->
+    <appender name="filelog_daily" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="${erp}logs/erp_logs_daily.log"/>
+        <param name="DatePattern" value="'daily.'yyyy-MM-dd'.log'"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.sss} %-5p [%t] %l:%m%n"/>
+        </layout>
+    </appender>
+    <!--
+        控制台输出格式
+    -->
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.sss} %-5p [%t] %l:%m%n"/>
+        </layout>
+    </appender>
+    <category name="com.*" additivity="false">
+        <level value="INFO"/>
+       <!-- <appender-ref ref="filelog_daily"/>
+        <appender-ref ref="filelog_appender"/>-->
+        <appender-ref ref="console"/>
+    </category>
+    <category name="net.sf.jasperreports" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="console"/>
+    </category>
+    <root>
+        <level value="ERROR"/>
+        <!--<appender-ref ref="filelog_daily"/>
+        <appender-ref ref="filelog_appender"/>-->
+        <appender-ref ref="console"/>
+    </root>
+</log4j:configuration>

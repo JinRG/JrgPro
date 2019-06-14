@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="service-provider" />
+    <dubbo:provider
+            filter="-exception"
+            version="0.0.1"/>
+    <dubbo:registry id="registryDefault"
+                    address="zookeeper://127.0.0.1:2181" check="true" default="true"
+                    dynamic="true" />
+    <dubbo:config-center address="zookeeper://127.0.0.1:2181" />
+    <dubbo:metadata-report address="zookeeper://127.0.0.1:2181" />
+
+    <!-- 服务提供 -->
+    <dubbo:protocol id="protocolDefault"
+                    host="127.0.0.1"
+                    accesslog="true"
+                    name="dubbo"
+                    default="true"
+                    port="20880"/>
+    <!-- 绑定实现类，id不要跟其他的重复，
+    consumer在引用SaleService对象的时候，ref的值是在这里注册的saleService，
+    即对应的是Service注解里面的名称
+     -->
+    <dubbo:service id="saleServiceD"
+                   interface="com.example.testapi.service.service.SaleService"
+                   ref="saleService"/>
+</beans>
